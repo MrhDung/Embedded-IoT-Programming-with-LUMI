@@ -1,0 +1,9 @@
+../Src/main_Asm4_IOT303.c:86:5:main	16	static
+../Src/main_Asm4_IOT303.c:120:6:AppInitManager	8	static
+../Src/main_Asm4_IOT303.c:149:6:LightSensor_AdcInit	56	static
+../Src/main_Asm4_IOT303.c:212:6:LedControl_TimerOCInit	48	static
+../Src/main_Asm4_IOT303.c:279:10:LightSensor_AdcPollingRead	16	static
+../Src/main_Asm4_IOT303.c:306:6:TimerOCSetPwm	16	static
+../Src/main_Asm4_IOT303.c:323:6:ABL_Process	16	static
+../Src/main_Asm4_IOT303.c:366:6:ABL_StepBrightness	8	static
+../Src/main_Asm4_IOT303.c:406:6:ABL_LedControl	16	static

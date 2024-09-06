@@ -1,0 +1,16 @@
+../Src/main_Asm2_IOT302.c:117:5:main	1
+../Src/main_Asm2_IOT302.c:147:6:AppInitCommon	1
+../Src/main_Asm2_IOT302.c:188:13:SetStateApp	1
+../Src/main_Asm2_IOT302.c:205:20:GetStateApp	1
+../Src/main_Asm2_IOT302.c:222:13:AppStateManager	6
+../Src/main_Asm2_IOT302.c:259:6:LoadConfiguration	1
+../Src/main_Asm2_IOT302.c:280:6:DeviceStateMachine	18
+../Src/main_Asm2_IOT302.c:476:5:Clamp	3
+../Src/main_Asm2_IOT302.c:494:6:Increase_LedLevel	1
+../Src/main_Asm2_IOT302.c:511:6:Decrease_LedLevel	1
+../Src/main_Asm2_IOT302.c:528:6:MultiSensorScan	2
+../Src/main_Asm2_IOT302.c:559:6:Task_multiSensorScan	1
+../Src/main_Asm2_IOT302.c:602:6:LedCmdSetState	11
+../Src/main_Asm2_IOT302.c:661:6:BuzzerCmdSetState	2
+../Src/main_Asm2_IOT302.c:685:6:LcdCmdSetState	2
+../Src/main_Asm2_IOT302.c:714:6:ButtonCmdSetState	13
