@@ -5,11 +5,11 @@
  *      Author: Mr.hDung
  *
  *  Request: Write a program for communication between the STM32F4 microcontroller
- *  		 and the PC_Simulator_KIT software
+ *  	     and the PC_Simulator_KIT software
  */
 
 /****************************************************************************************/
-/*                                      INCLUDEs                                		*/
+/*                                      INCLUDEs                                	*/
 /****************************************************************************************/
 #include <stdio.h>
 #include <stdint.h>
@@ -32,25 +32,25 @@
 #include "misc.h"
 
 /****************************************************************************************/
-/*                                       DEFINEs                        			    */
+/*                                       DEFINEs                        		*/
 /****************************************************************************************/
 // The buffer size value (FIFO)
-#define SIZE_QUEUE_DATA_RX 				256
+#define SIZE_QUEUE_DATA_RX 			256
 
-#define USART2_GPIO_PORT				GPIOA
-#define USART2_TX_GPIO_PIN				GPIO_Pin_2
-#define USART2_RX_GPIO_PIN				GPIO_Pin_3
-#define USART2_GPIO_RCC					RCC_AHB1Periph_GPIOA
-#define USART2_RCC						RCC_APB1Periph_USART2
-#define USART_BAUDRATE					57600
+#define USART2_GPIO_PORT			GPIOA
+#define USART2_TX_GPIO_PIN			GPIO_Pin_2
+#define USART2_RX_GPIO_PIN			GPIO_Pin_3
+#define USART2_GPIO_RCC				RCC_AHB1Periph_GPIOA
+#define USART2_RCC				RCC_APB1Periph_USART2
+#define USART_BAUDRATE				57600
 
 // The size of the array storing data retrieved from the queue
-#define RX_BUFFER_SIZE 					16
+#define RX_BUFFER_SIZE 				16
 
-#define FRAME_SOF 						0xB1
-#define FRAME_ACK 						0x06
-#define FRAME_NACK 						0x15
-#define CXOR_INIT_VAL 					0xFF
+#define FRAME_SOF 				0xB1
+#define FRAME_ACK 				0x06
+#define FRAME_NACK 				0x15
+#define CXOR_INIT_VAL 				0xFF
 
 // Message retrieving information and status of the device from the host computer
 #define CMD_TYPE_GET               		0x00
@@ -61,42 +61,42 @@
 // Message for controlling the device from the host computer
 #define CMD_TYPE_SET               	 	0x02
 
-#define CMD_OPT							0x00
-#define CMD_SEQUENCE					0x00
-#define CMD_ID_LED 						0x01
-#define CMD_ID_BUZZER					0x04
-#define CMD_ID_BUTTON 					0x82
-#define CMD_ID_TEMP_SENSOR 				0x84
-#define CMD_ID_HUMI_SENSOR 				0x85
+#define CMD_OPT					0x00
+#define CMD_SEQUENCE				0x00
+#define CMD_ID_LED 				0x01
+#define CMD_ID_BUZZER				0x04
+#define CMD_ID_BUTTON 				0x82
+#define CMD_ID_TEMP_SENSOR 			0x84
+#define CMD_ID_HUMI_SENSOR 			0x85
 #define CMD_ID_LIGHT_SENSOR 			0x86
-#define CMD_ID_LCD						0x87
+#define CMD_ID_LCD				0x87
 
-#define CMD_ID							g_strRxBuffer[2]
-#define CMD_TYPE						g_strRxBuffer[3]
-#define CMD_DATA1						g_strRxBuffer[4]
-#define CMD_DATA2						g_strRxBuffer[5]
-#define CMD_DATA3						g_strRxBuffer[6]
-#define CMD_DATA4						g_strRxBuffer[7]
-#define CMD_DATA5						g_strRxBuffer[8]
+#define CMD_ID					g_strRxBuffer[2]
+#define CMD_TYPE				g_strRxBuffer[3]
+#define CMD_DATA1				g_strRxBuffer[4]
+#define CMD_DATA2				g_strRxBuffer[5]
+#define CMD_DATA3				g_strRxBuffer[6]
+#define CMD_DATA4				g_strRxBuffer[7]
+#define CMD_DATA5				g_strRxBuffer[8]
 
-#define CMD_DATA_LED_ID					CMD_DATA1
-#define CMD_DATA_LED_COLOR				CMD_DATA2
+#define CMD_DATA_LED_ID				CMD_DATA1
+#define CMD_DATA_LED_COLOR			CMD_DATA2
 #define CMD_DATA_LED_NUMBLINK			CMD_DATA3
 #define CMD_DATA_LED_INTERVAL			CMD_DATA4
 #define CMD_DATA_LED_LASTSTATE			CMD_DATA5
 #define CMD_DATA_BUZZER_STATE			CMD_DATA1
 #define CMD_DATA_BUTTON_EVENT			CMD_DATA1
 #define CMD_DATA_BUTTON_STATE			CMD_DATA2
-#define CMD_DATA_LCD					CMD_DATA1
+#define CMD_DATA_LCD				CMD_DATA1
 
 // LED brightness adjustment cycle
-#define CYCLE_LED_CHANGE				20
+#define CYCLE_LED_CHANGE			20
 
 // Sensor scanning cycle
 #define PERIOD_SCAN_MULTISENSOR			1000
 
 /****************************************************************************************/
-/*                                  STRUCTs AND ENUMs                           		*/
+/*                                  STRUCTs AND ENUMs                           	*/
 /****************************************************************************************/
 typedef enum
 {
@@ -112,28 +112,30 @@ typedef enum
 	STATE_APP_RESET
 } state_app_t;
 
-typedef enum {
-    RX_STATE_START_BYTE,
-    RX_STATE_DATA_BYTES,
-    RX_STATE_CXOR_BYTE
+typedef enum 
+{
+	RX_STATE_START_BYTE,
+	RX_STATE_DATA_BYTES,
+	RX_STATE_CXOR_BYTE
 } RX_STATE;
 
-typedef enum {
-    USART_STATE_IDLE,
-    USART_STATE_DATA_RECEIVED,
-    USART_STATE_ACK_RECEIVED,
-    USART_STATE_NACK_RECEIVED,
-    USART_STATE_ERROR,
-    USART_STATE_RX_TIMEOUT,
+typedef enum 
+{
+	USART_STATE_IDLE,
+	USART_STATE_DATA_RECEIVED,
+	USART_STATE_ACK_RECEIVED,
+	USART_STATE_NACK_RECEIVED,
+	USART_STATE_ERROR,
+	USART_STATE_RX_TIMEOUT,
 } USART_STATE;
 
 /****************************************************************************************/
-/*                                  GLOBAL VARIABLEs                 					*/
+/*                                  GLOBAL VARIABLEs                 			*/
 /****************************************************************************************/
 ucg_t 			g_ucg;
 
 // Variable representing the current state of the program
-state_app_t 	g_eCurrentState;
+state_app_t 		g_eCurrentState;
 
 uint8_t 		g_ledRed = 0;
 uint8_t 		g_ledGreen = 0;
@@ -155,7 +157,7 @@ uint8_t 		g_IndexRxBuf;
 uint8_t 		g_strRxBufData[SIZE_QUEUE_DATA_RX];
 
 // Pointer to reference the FIFO object
-buffqueue_t 	g_serialQueueRx;
+buffqueue_t 		g_serialQueueRx;
 
 // Array storing data retrieved from the queue
 uint8_t 		g_strRxBuffer[RX_BUFFER_SIZE] = {0};
@@ -169,29 +171,29 @@ char 			g_strLight[30] = "";
 /****************************************************************************************/
 /*                                 FUNCTIONs PROTOTYPE                                  */
 /****************************************************************************************/
-void 			AppInitManager (void);
-void 			AppStateManager (uint8_t event);
-void 			SetStateApp (state_app_t state);
+void 		AppInitManager (void);
+void 		AppStateManager (uint8_t event);
+void 		SetStateApp (state_app_t state);
 state_app_t 	GetStateApp (void);
-void 			SerialCustom_Init (void);
-void 			USART2_Init (void);
-void 			USART2Modify_IRQHandler (void);
-void			LoadConfiguration (void);
-void 			DeviceStateMachine (uint8_t event);
-uint8_t 		Clamp (uint8_t value, uint8_t min , uint8_t max);
-void 			Increase_LedLevel (void);
-void 			Decrease_LedLevel (void);
-void 			MultiSensorScan (void);
-void 			Task_MultiSensorScan (void);
-void 			Serial_SendPacketCustom (uint8_t byOption,uint8_t byCmdId, uint8_t byCmdType,
-										 uint8_t *pPayload, uint8_t byLengthPayload);
-void 			processSerialReceiverCustom (void);
-uint8_t 		PollRxBuff (void);
-void 			ButtonCmdSetState (uint8_t button_event, uint8_t button_state);
-void 			LedCmdSetState (uint8_t led_id, uint8_t led_color, uint8_t led_num_blink,
-		 	 	 	 	 	 	uint8_t led_interval, uint8_t led_last_state);
-void 			BuzzerCmdSetState (uint8_t buzzer_state);
-void 			LcdCmdSetState (char *text);
+void 		SerialCustom_Init (void);
+void 		USART2_Init (void);
+void 		USART2Modify_IRQHandler (void);
+void		LoadConfiguration (void);
+void 		DeviceStateMachine (uint8_t event);
+uint8_t 	Clamp (uint8_t value, uint8_t min , uint8_t max);
+void 		Increase_LedLevel (void);
+void 		Decrease_LedLevel (void);
+void 		MultiSensorScan (void);
+void 		Task_MultiSensorScan (void);
+void 		Serial_SendPacketCustom (uint8_t byOption,uint8_t byCmdId, uint8_t byCmdType,
+					 uint8_t *pPayload, uint8_t byLengthPayload);
+void 		processSerialReceiverCustom (void);
+uint8_t 	PollRxBuff (void);
+void 		ButtonCmdSetState (uint8_t button_event, uint8_t button_state);
+void 		LedCmdSetState (uint8_t led_id, uint8_t led_color, uint8_t led_num_blink,
+		 	 	uint8_t led_interval, uint8_t led_last_state);
+void 		BuzzerCmdSetState (uint8_t buzzer_state);
+void 		LcdCmdSetState (char *text);
 
 /****************************************************************************************/
 /*                                      FUNCTIONs                                       */
@@ -443,7 +445,7 @@ void USART2Modify_IRQHandler (void)
  * @func:  		LoadConfiguration
  *
  * @brief		The function to display information on the LCD and PC_Simulator_KIT
- * 				when the device is powered on
+ * 			when the device is powered on
  *
  * @param:		None
  *
@@ -465,9 +467,9 @@ void LoadConfiguration (void)
  * @func:  		DeviceStateMachine
  *
  * @brief:		- The function to control LED, Buzzer, and display information on the LCD after
- * 				pressing buttons on the KIT board
- * 				- Simultaneously, send updates of the corresponding LED color status and buzzer state
- * 				to the PC_Simulator_KIT
+ * 			pressing buttons on the KIT board
+ * 			- Simultaneously, send updates of the corresponding LED color status and buzzer state
+ * 			to the PC_Simulator_KIT
  *
  * @param:		event - Event when pressing a button on the KIT board
  *
@@ -623,10 +625,10 @@ void DeviceStateMachine (uint8_t event)
 			}
 
 			g_idTimerStartIncrease = TimerStart("Increase_Led",
-												CYCLE_LED_CHANGE,
-												100,
-												(void*) Increase_LedLevel,
-												NULL);
+							     CYCLE_LED_CHANGE,
+							     100,
+							     (void*) Increase_LedLevel,
+							     NULL);
 		} break;
 
 		case EVENT_OF_BUTTON_5_HOLD_1S:
@@ -638,10 +640,10 @@ void DeviceStateMachine (uint8_t event)
 			}
 
 			g_idTimerStartDecrease = TimerStart("Decrease_Led",
-												CYCLE_LED_CHANGE,
-												100,
-												(void*) Decrease_LedLevel,
-												NULL);
+							     CYCLE_LED_CHANGE,
+							     100,
+							     (void*) Decrease_LedLevel,
+							     NULL);
 		} break;
 
 		case EVENT_OF_BUTTON_1_RELEASED_1S:
@@ -664,9 +666,9 @@ void DeviceStateMachine (uint8_t event)
  *
  * @brief:		The function to generate a range of values
  *
- * @param[1]:	value - Current value
- * @param[2]:	min - Min value
- * @param[3]:	max - Max value
+ * @param[1]:		value - Current value
+ * @param[2]:		min - Min value
+ * @param[3]:		max - Max value
  *
  * @retval:		value
  *
@@ -736,18 +738,18 @@ void MultiSensorScan (void)
 	}
 
 	g_idTimerSensorUpdate = TimerStart("Task_multiSensorScan",
-									PERIOD_SCAN_MULTISENSOR,
-									TIMER_REPEAT_FOREVER,
-									(void*)Task_MultiSensorScan,
-									NULL);
+					    PERIOD_SCAN_MULTISENSOR,
+					    TIMER_REPEAT_FOREVER,
+					    (void*)Task_MultiSensorScan,
+				            NULL);
 }
 
 /*
  * @func:  		Task_MultiSensorScan
  *
  * @brief:		- The function to retrieve temperature, humidity, and light intensity values from
- * 				the sensors and display them on the LCD
- * 				- Simultaneously, send these values to the PC_Simulator_KIT
+ * 			the sensors and display them on the LCD
+ * 			- Simultaneously, send these values to the PC_Simulator_KIT
  *
  * @param:		None
  *
@@ -787,18 +789,18 @@ void Task_MultiSensorScan (void)
  *
  * @brief:		The function send text to PC_Simulator_KIT
  *
- * @param[1]:	byOption - Byte Option of the frame
- * @param[2]:	byCmdId - Byte CmdID of the frame
- * @param[3]:	byCmdType - Byte CmdType of the frame
- * @param[4]:	pPayload - Byte Data of the frame
- * @param[5]:	byLengthPayload - Data size
+ * @param[1]:		byOption - Byte Option of the frame
+ * @param[2]:		byCmdId - Byte CmdID of the frame
+ * @param[3]:		byCmdType - Byte CmdType of the frame
+ * @param[4]:		pPayload - Byte Data of the frame
+ * @param[5]:		byLengthPayload - Data size
  *
  * @retval:		None
  *
  * @note:		None
  */
 void Serial_SendPacketCustom (uint8_t byOption, uint8_t byCmdId, uint8_t byCmdType,
-							  uint8_t *pPayload, uint8_t byLengthPayload)
+			      uint8_t *pPayload, uint8_t byLengthPayload)
 {
 	uint8_t	byLength = 5 + byLengthPayload;
 	static uint8_t bySequence = 0;
@@ -859,7 +861,7 @@ void processSerialReceiverCustom (void)
 				if ((CMD_ID == CMD_ID_LED) && (CMD_TYPE == CMD_TYPE_SET))
 				{
 					LedCmdSetState(CMD_DATA_LED_ID, CMD_DATA_LED_COLOR, CMD_DATA_LED_NUMBLINK,	\
-								   CMD_DATA_LED_INTERVAL, CMD_DATA_LED_LASTSTATE);
+						       CMD_DATA_LED_INTERVAL, CMD_DATA_LED_LASTSTATE);
 				}
 				else if ((CMD_ID == CMD_ID_BUZZER) && (CMD_TYPE == CMD_TYPE_SET))
 				{
@@ -898,7 +900,7 @@ void processSerialReceiverCustom (void)
  *
  * @param:		None
  *
- * @retval:		byUartState - USART Status
+ * @retval:		None
  *
  * @note:		None
  */
@@ -991,8 +993,8 @@ uint8_t PollRxBuff (void)
  *
  * @brief:		The function to control the button when receiving a message from PC_Simulator_KIT
  *
- * @param[1]:	button_event - Corresponding button press event on KIT
- * @param[2]:	button_state - Status of the button press
+ * @param[1]:		button_event - Corresponding button press event on KIT
+ * @param[2]:		button_state - Status of the button press
  *
  * @retval:		None
  *
@@ -1042,7 +1044,7 @@ void ButtonCmdSetState (uint8_t button_event, uint8_t button_state)
 				}
 
 				g_idTimerDisplayLCD = TimerStart("MultiSensorScan", 7000, 1, 	\
-												(void*)MultiSensorScan, NULL);
+								 (void*)MultiSensorScan, NULL);
 				g_B3Count = 0;
 			}
 		} break;
@@ -1152,20 +1154,20 @@ void ButtonCmdSetState (uint8_t button_event, uint8_t button_state)
  * @func:  		LedCmdSetState
  *
  * @brief:		The function to control the turning on/off of the RGB LED on KIT
- * 				when receiving a message from PC_Simulator_KIT
+ * 			when receiving a message from PC_Simulator_KIT
  *
- * @param[1]:	led_id - Corresponding LED on KIT
- * @param[2]:	led_color - Corresponding color of the Led
- * @param[3]:	led_num_blink - Number of Led flashes
- * @param[4]:	led_interval - Led on/off cycle
- * @param[5]:	led_last_state - Last state of the Led
+ * @param[1]:		led_id - Corresponding LED on KIT
+ * @param[2]:		led_color - Corresponding color of the Led
+ * @param[3]:		led_num_blink - Number of Led flashes
+ * @param[4]:		led_interval - Led on/off cycle
+ * @param[5]:		led_last_state - Last state of the Led
  *
- * @retval:	None
+ * @retval:		None
  *
- * @note:	None
+ * @note:		None
  */
 void LedCmdSetState (uint8_t led_id, uint8_t led_color, uint8_t led_num_blink,
-		 	 	 	 uint8_t led_interval, uint8_t led_last_state)
+		     uint8_t led_interval, uint8_t led_last_state)
 {
 	if (led_id == LED_KIT_ID0)
 	{
@@ -1215,7 +1217,7 @@ void LedCmdSetState (uint8_t led_id, uint8_t led_color, uint8_t led_num_blink,
  * @func:  		BuzzerCmdSetState
  *
  * @brief:		The function to control the turning on/off of the horn
- * 				when receiving a message from PC_Simulator_KIT
+ * 			when receiving a message from PC_Simulator_KIT
  *
  * @param:		buzzer_state - Buzzer state
  *
@@ -1235,7 +1237,7 @@ void BuzzerCmdSetState (uint8_t buzzer_state)
  * @func:  		LcdCmdSetState
  *
  * @brief:		The function to display a text segment on the LCD screen
- * 				when receiving a message from PC_Simulator_KIT
+ * 			when receiving a message from PC_Simulator_KIT
  *
  * @param:		text - Text segment to be displayed
  *
