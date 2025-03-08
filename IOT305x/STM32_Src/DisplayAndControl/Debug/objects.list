@@ -1,0 +1,6 @@
+"./Src/lcd.o"
+"./Src/main-displaycontrol.o"
+"./Src/syscalls.o"
+"./Src/sysmem.o"
+"./Src/usart.o"
+"./Startup/startup_stm32f401retx.o"

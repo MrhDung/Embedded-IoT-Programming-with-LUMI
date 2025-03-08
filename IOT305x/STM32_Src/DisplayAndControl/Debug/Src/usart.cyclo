@@ -1,0 +1,16 @@
+../Src/usart.c:63:6:USART6_FifoAndUsartInit	1
+../Src/usart.c:80:6:USART6_Init	1
+../Src/usart.c:150:6:USART6Modify_IRQHandler	2
+../Src/usart.c:173:6:USART6_HandleEventCallback	1
+../Src/usart.c:189:6:processSerialHandle	4
+../Src/usart.c:214:9:PollRxBuff	11
+../Src/usart.c:308:10:USART_GetFrame	1
+../Src/usart.c:325:6:USART_SendFrame	4
+../Src/usart.c:351:6:USART_SendPacket	6
+../Src/usart.c:404:6:USART_SendLedState	1
+../Src/usart.c:425:6:USART_SendValueDistance	1
+../Src/usart.c:446:6:USART_SendValueLatency	1
+../Src/usart.c:467:6:USART_SendValueSensitivity	1
+../Src/usart.c:488:6:USART_SendValueLight	1
+../Src/usart.c:509:6:USART_SendSyncMessage	1
+../Src/usart.c:530:6:USART_ReceivedData	26
