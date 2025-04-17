@@ -1,7 +1,0 @@
-../Src/main-displaycontrol.c:49:5:main	1
-../Src/main-displaycontrol.c:78:6:Main_AppInitManager	1
-../Src/main-displaycontrol.c:104:6:Main_AppStateManager	7
-../Src/main-displaycontrol.c:153:6:Main_SetStateApp	1
-../Src/main-displaycontrol.c:169:13:Main_GetStateApp	1
-../Src/main-displaycontrol.c:185:6:Main_DeviceStateMachine	9
-../Src/main-displaycontrol.c:254:6:Main_Usart2RxHandle	6

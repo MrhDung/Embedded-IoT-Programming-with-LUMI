@@ -1,7 +1,0 @@
-../Src/main-displaycontrol.c:49:5:main	8	static
-../Src/main-displaycontrol.c:78:6:Main_AppInitManager	8	static
-../Src/main-displaycontrol.c:104:6:Main_AppStateManager	24	static
-../Src/main-displaycontrol.c:153:6:Main_SetStateApp	16	static
-../Src/main-displaycontrol.c:169:13:Main_GetStateApp	4	static
-../Src/main-displaycontrol.c:185:6:Main_DeviceStateMachine	16	static
-../Src/main-displaycontrol.c:254:6:Main_Usart2RxHandle	16	static
