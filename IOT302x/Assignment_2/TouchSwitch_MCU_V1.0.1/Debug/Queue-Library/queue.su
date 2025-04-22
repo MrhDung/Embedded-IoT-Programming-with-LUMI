@@ -1,0 +1,7 @@
+D:/1_Studying/1_IoT/1_FUNIX/Libraries_Add/Queue-Library/queue.c:47:1:bufInit	24	static
+D:/1_Studying/1_IoT/1_FUNIX/Libraries_Add/Queue-Library/queue.c:66:1:bufNumItems	16	static
+D:/1_Studying/1_IoT/1_FUNIX/Libraries_Add/Queue-Library/queue.c:79:1:bufIsFull	16	static
+D:/1_Studying/1_IoT/1_FUNIX/Libraries_Add/Queue-Library/queue.c:92:1:bufIsEmpty	16	static
+D:/1_Studying/1_IoT/1_FUNIX/Libraries_Add/Queue-Library/queue.c:105:1:bufFlush	16	static
+D:/1_Studying/1_IoT/1_FUNIX/Libraries_Add/Queue-Library/queue.c:123:1:bufEnDat	24	static
+D:/1_Studying/1_IoT/1_FUNIX/Libraries_Add/Queue-Library/queue.c:154:1:bufDeDat	24	static
